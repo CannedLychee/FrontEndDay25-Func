@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>index</title>
+		<style>
+			.time_select {
+				display: flex;
+				flex-direction: row;
+				height: 40px;
+				align-items: center;
+			}
+				.time_select p {
+					margin: 5px;
+				}
+			.time_dis {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+			}
+			#result-wrapper{
+				display: flex;
+				flex-direction: column;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="time_select">
+			<select id="year-select"	onchange="changeYYYY()"><option value="">&ensp;&ensp;&ensp;&ensp;</option></select>
+			<p>年 </p>
+			<select id="month-select"	onchange="changeMM()"><option value="">&ensp;&ensp;</option></select>
+			<p>月 </p>
+			<select id="day-select"		onchange="changeDD()"><option value="">&ensp;&ensp;</option></select>
+			<p>日 </p>
+			<select id="hour-select"	onchange="changehh()"><option value="">&ensp;&ensp;</option></select>
+			<p>时 </p>
+			<select id="minute-select"	onchange="changemm()"><option value="">&ensp;&ensp;</option></select>
+			<p>分 </p>
+			<select id="second-select"	onchange="changess()"><option value="">&ensp;&ensp;</option></select>
+			<p>秒 </p>
+		</div>
+		
+		<div id="result-wrapper">
+			<p>现在距离</p>
+			<div class="time_dis">
+				<p id="set_YYYY">xxxx年</p>
+				<p id="set_MM">xx月</p>
+				<p id="set_DD">xx日</p>
+				<p>&nbsp;</p>
+				<p id="set_d">星期x</p>
+				<p>&nbsp;</p>
+				<p id="set_hh">xx时</p>
+				<p id="set_mm">xx分</p>
+				<p id="set_ss">xx秒</p>
+			</div>
+			<p>还有</p>
+			<div class="time_dis">
+				<p id="DD_away">xx天</p>
+				<p id="hh_away">xx小时</p>
+				<p id="mm_away">xx分</p>
+				<p id="ss_away">xx秒</p>
+			</div>
+		</div>
+		<br/><br/>
+		<h id='time'></h>
+		<script>
+			let YYYY = document.getElementById('year-select')
+			let MM = document.getElementById('month-select')
+			let DD = document.getElementById('day-select')
+			let hh = document.getElementById('hour-select')
+			let mm = document.getElementById('minute-select')
+			let ss = document.getElementById('second-select')
+
+			function setYYYY(length) {
+				YYYY.innerHTML = ''
+				for (let i=2000;i<=2000+length;i++) {
+					YYYY.innerHTML += `<option value="${i}">${i}</option>`
+				}
+			}
+			function setMM(length) {
+				MM.innerHTML = ''
+				for (let i=1;i<=length;i++) {
+					if (i<10)
+						MM.innerHTML += `<option value="0${i}">0${i}</option>`
+					else
+						MM.innerHTML += `<option value="${i}">${i}</option>`
+				}
+			}
+			function setDD(length) {
+				DD.innerHTML = ''
+				for (let i=1;i<=length;i++) {
+					if (i<10)
+						DD.innerHTML += `<option value="0${i}">0${i}</option>`
+					else
+						DD.innerHTML += `<option value="${i}">${i}</option>`
+				}
+			}
+			function sethh(length) {
+				hh.innerHTML = ''
+				for (let i=0;i<length;i++) {
+					if (i<10)
+						hh.innerHTML += `<option value="0${i}">0${i}</option>`
+					else
+						hh.innerHTML += `<option value="${i}">${i}</option>`
+				}
+			}
+			function setmm(length) {
+				mm.innerHTML = ''
+				for (let i=0;i<length;i++) {
+					if (i<10)
+						mm.innerHTML += `<option value="0${i}">0${i}</option>`
+					else
+						mm.innerHTML += `<option value="${i}">${i}</option>`
+				}
+			}
+			function setss(length) {
+				ss.innerHTML = ''
+				for (let i=0;i<length;i++) {
+					if (i<10)
+						ss.innerHTML += `<option value="0${i}">0${i}</option>`
+					else
+						ss.innerHTML += `<option value="${i}">${i}</option>`
+				}
+			}
+
+			let let_YYYY,let_MM,let_DD,let_hh,let_mm,let_ss
+			let set_YYYY	= document.getElementById('set_YYYY')
+			let set_MM		= document.getElementById('set_MM')
+			let set_DD		= document.getElementById('set_DD')
+			let set_d		= document.getElementById('set_d')
+			let set_hh		= document.getElementById('set_hh')
+			let set_mm		= document.getElementById('set_mm')
+			let set_ss		= document.getElementById('set_ss')
+
+			let away_DD		= document.getElementById('DD_away')
+			let away_hh		= document.getElementById('hh_away')
+			let away_mm		= document.getElementById('mm_away')
+			let away_ss		= document.getElementById('ss_away')
+
+			let set_DATE	= new Date()
+			let day_AWAY	= new Date()
+
+			setYYYY(100)//指定年份可选范围
+			YYYY.selectedIndex = -1
+			changeYYYY = function() {
+				let_YYYY = YYYY.options[YYYY.selectedIndex].value
+				set_YYYY.innerHTML = let_YYYY + '年'
+				set_DATE.setFullYear(Number(let_YYYY))
+				setMM(12)
+				MM.selectedIndex = -1
+			}
+			changeMM = function() {
+				let_MM = MM.options[MM.selectedIndex].value
+				set_MM.innerHTML = let_MM + '月'
+				set_DATE.setMonth(Number(let_MM)-1)
+				switch(Number(let_MM)) {
+					case 1:
+						setDD(31)
+						break
+					case 2:
+						if (let_YYYY%4==0)
+							setDD(29)
+						else
+							setDD(28)
+						break
+					case 3:
+						setDD(31)
+						break
+					case 4:
+						setDD(30)
+						break
+					case 5:
+						setDD(31)
+						break
+					case 6:
+						setDD(30)
+						break
+					case 7:
+						setDD(31)
+						break
+					case 8:
+						setDD(31)
+						break
+					case 9:
+						setDD(30)
+						break
+					case 10:
+						setDD(31)
+						break
+					case 11:
+						setDD(30)
+						break
+					case 12:
+						setDD(31)
+						break
+					default:
+						setDD(40)
+						break
+				}
+				DD.selectedIndex = -1
+			}
+			changeDD = function() {
+				let_DD = DD.options[DD.selectedIndex].value
+				set_DD.innerHTML = let_DD + '日'
+				set_DATE.setDate(Number(let_DD))
+				let Day = new Date()
+				Day.setFullYear(Number(let_YYYY),Number(let_MM)-1,Number(let_DD))
+				let str=['星期日','星期一','星期二','星期三','星期四','星期五','星期六']
+				set_d.innerHTML = str[Day.getDay()]
+				sethh(24)
+				hh.selectedIndex = -1
+			}
+			changehh = function() {
+				let_hh = hh.options[hh.selectedIndex].value
+				set_hh.innerHTML = let_hh + '时'
+				set_DATE.setHours(Number(let_hh))
+				setmm(60)
+				mm.selectedIndex = -1
+			}
+			changemm = function() {
+				let_mm = mm.options[mm.selectedIndex].value
+				set_mm.innerHTML = let_mm + '分'
+				set_DATE.setMinutes(Number(let_mm))
+				setss(60)
+				ss.selectedIndex = -1
+			}
+			changess = function() {
+				let_ss = ss.options[ss.selectedIndex].value
+				set_ss.innerHTML = let_ss  + '秒'
+				set_DATE.setSeconds(Number(let_ss))
+				start()
+			}
+
+			time = document.getElementById('time')
+
+			function myGetDay() {
+				let d = new Date()
+				let days = ['周日','周一','周二','周三','周四','周五','周六']
+				return days[d.getDay()]
+			}
+
+			function format(num) {
+				return num<10 ? ('0'+num):num
+			}
+
+			function mygetYea(d) {
+				return d.getFullYear()
+			}
+			function mygetDat(d) {
+				return format(d.getDate())
+			}
+			function mygetMon(d) {
+				return format(d.getMonth())
+			}
+			function mygetHou(d) {
+				return format(d.getHours())
+			}
+			function mygetMin(d) {
+				return format(d.getMinutes())
+			}
+			function mygetSec(d) {
+				return format(d.getSeconds())
+			}
+			function mygetAPM(d) {
+				if (d.getHours()>12)	return 'AM'
+				else					return 'PM'
+			}
+			function myGETT() {
+				let now_DATE = new Date()
+				day_AWAY.setTime(set_DATE - now_DATE)
+				let str = 	mygetYea(now_DATE) + '年' + mygetMon(now_DATE) + '月' + mygetDat(now_DATE) + '日 ' + myGetDay(now_DATE) + ' ' + mygetHou(now_DATE) + '时' + mygetMin(now_DATE) + '分' + mygetSec(now_DATE) + '秒 ' + mygetAPM(now_DATE)
+				if (day_AWAY<0)
+					time.innerHTML = '已过期'
+				else {
+					time.innerHTML = str
+					away_DD.innerHTML = day_AWAY.getDate()-1 + '天'
+					away_hh.innerHTML = day_AWAY.getHours()-8 + '时'
+					away_mm.innerHTML = day_AWAY.getMinutes() + '分'
+					away_ss.innerHTML = day_AWAY.getSeconds() + '秒'
+				}
+			}
+			function start() {
+				let a = setInterval(myGETT,1000)
+
+			}
+		</script>
+	</body>
+</html>
